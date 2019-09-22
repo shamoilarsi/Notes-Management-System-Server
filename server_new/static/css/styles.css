@@ -1,0 +1,405 @@
+@font-face {
+	font-family: Lovelo;
+	src: url('Lovelo-Black.woff2');
+}
+
+@font-face{
+	font-family: Simplifica;
+	src: url('SIMPLIFICA Typeface.ttf');
+}
+
+:root {
+    --mainbg: #3333cc;
+    --mainbgdark: #2d2db7;
+}
+
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.error {
+    border: 2px solid red;
+}
+
+body {
+    font-family: Verdana;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+}
+
+a.title {
+    color: white;
+    text-decoration: none;
+}
+
+p.title {
+    text-align: center;
+    font-size: 25px;
+    margin: 0px;
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+    color: white;
+    background: var(--mainbg);
+}
+
+nav.layout {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    background: var(--mainbg);
+}
+
+ul.layout {
+    text-align: right;
+    width: 90%;
+    margin: 0px auto;
+    padding: 0px;
+}
+
+ul.layout li {
+    list-style: none;
+    display: inline-block;
+    padding: 20px;
+}
+
+
+ul.layout li a {
+    /* font-family: "Sans-serif"; */
+    color: #dcdcdc;
+    padding: 5px;
+    text-decoration: none;
+}
+
+ul.layout li a:hover {
+    color: white;
+    transition: 0.3s;
+}
+
+button {
+    padding: 5px 20px;
+    border-radius: 5px;
+    background-color: var(--mainbg);
+    color: white;
+    border: 2px solid var(--mainbg);
+    transition: background-color 0.2s linear 0s;
+}
+
+button:hover {
+    border: 2px solid var(--mainbg);
+    background-color: #ffffff;
+    color: black;
+    transition: background-color 0.2s linear 0s;
+}
+
+ul.notes {
+    padding: 5px;
+    padding-top: 20px;
+    text-align: center;
+    list-style: none;
+}
+
+ul.notes li {
+    margin: 7px;
+
+}
+
+ul.pack {
+    border-radius: 5px;
+    background: #dcdcdc;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    list-style: none;
+}
+
+
+ul.pack li {
+    text-align: left;
+    word-wrap: break-word;
+
+}
+
+ul.pack li.note {
+    cursor: pointer;
+}
+
+ul.pack li.date {
+    text-align: right;
+    padding-right: 2px;
+}
+
+
+input {
+    /*border:none;*/
+    border-radius: 3px;
+    margin-left: 10px;
+    border: 1px solid var(--mainbg);
+    padding: 5px;
+}
+
+input.login:hover {
+    border: 1px solid var(--mainbgdark);
+}
+
+
+i.title_bar_text {
+    text-align: left;
+    padding-top: 15px;
+    color: white;
+    font-size: 21px;
+    display: table-cell;
+}
+
+
+div.title_bar {
+    height: 60px;
+    width: 100%;
+    background: var(--mainbg);
+    position: relative;
+    height: 60px;
+}
+
+
+button.half-out-button {
+    background: #fb4400;
+    border: 0px solid red;
+    outline: none;
+    position: absolute;
+    bottom: 0;
+    right: 5%;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-bottom: -22px; /* Change this as you like */
+    cursor: pointer;
+    transition: box-shadow 0.2s linear 0s;
+}
+
+button.half-out-button:hover {
+    transition: box-shadow 0.2s linear 0s;
+    box-shadow: 0px 0px 5px black;
+    text-align: center;
+
+}
+
+.textOfButton {
+    font-size: 25px;
+    color: white;
+    white-space: nowrap;
+    position: absolute;
+    bottom: 0;
+    right: 5%;
+    margin-bottom: -12px;
+    margin-right: 16.5px;
+    cursor: pointer;
+}
+
+
+.bg-modal-add-note {
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.bg-modal-noteclick {
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.bg-modal-edit-note {
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+}
+
+
+div.onoteadded {
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+
+div.noteadded {
+    display: flex;
+    position: relative;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+}
+
+
+.modal-contents {
+    width: 400px;
+    height: 150px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    position: relative;
+    text-align: center;
+}
+
+.modal-contents-editNote {
+    width: 400px;
+    height: 150px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    position: relative;
+    text-align: center;
+}
+
+.modal-contents-noteclicked {
+    width: 400px;
+    height: 100px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    position: relative;
+    text-align: center;
+}
+
+ul.note-clicked li {
+    width: 90%;
+    padding: 10px;
+    padding-left: 0px;
+    list-style: none;
+    background-color: white;
+}
+
+input.addNoteCategory input.addNote {
+    width: 70%;
+    display: block;
+    padding: 8px;
+}
+
+input.addNote{
+    margin: 40px auto;
+}
+
+input.editNote {
+    width: 70%;
+    display: block;
+    margin: 40px auto;
+    padding: 8px;
+}
+
+
+div.close {
+    position: absolute;
+    top: 0px;
+    right: 12px;
+    font-size: 42px;
+    color: #333;
+    transform: rotate(45deg);
+    cursor: pointer;
+    transition: color 0.2s linear 0s;
+}
+
+div.close:hover {
+    transition: color 0.2s linear 0s;
+    color: #666;
+}
+
+.note-in-form {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: grey;
+    width: 300px;
+}
+
+div.forFont {
+    display: inline-block;
+    left: 0px;
+    background-color: red;
+}
+
+
+.delButton {
+    cursor: pointer;
+}
+
+.editButton {
+    cursor: pointer;
+}
+
+
+@media (min-width: 867px) {
+
+    ul.notes {
+        width: 50%;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 867px) {
+    p.title {
+        font-size: 22px;
+        padding-top: 17px;
+        padding-left: 15px;
+        white-space: nowrap;
+    }
+
+    ul.layout li {
+        padding: 10px;
+        padding-top: 20px;
+    }
+
+    ul.layout li a {
+        font-size: 15px;
+    }
+
+    div.title_bar {
+        height: 50px;
+    }
+
+    i.title_bar_text {
+        padding-top: 14px;
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1:5000/static/css/styles.css">
+<script src="/static/js/script.js"></script>
+
+{%block script%} {%endblock%}
+
+
+<body>
+<nav class="layout">
+    <p class="title"><a class="title" href="/">Die-ry</a></p>
+    <ul class="layout">
+        {%block navButtons%}
+        <li><a href="/login">Login</a></li>
+        <li><a href="/newacc">Sign Up</a></li>
+        <li><a href="/about">About</a></li>
+        {%endblock%}
+    </ul>
+</nav>
+
+
+{% block body %}{% endblock %}
+
+<div style="padding-bottom:20px;"></div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{%block title%}Die-ry{%endblock%}
+{%block script%}
+
+<script>
+    //Wanted to run always when /main is loaded
+    var uname = getCookie("username");
+    if (uname == null)
+        uname = "None";
+
+
+    var password = getCookie("password");
+    if (password == null)
+        password = "None";
+
+    $.ajax({
+        url: "/jmain",
+        type: "post",
+        data: {username: uname, password: password, link: window.location.pathname},
+        success: function (data) {
+            if (!data.status) {
+                window.location = "/login";
+            }
+        }
+    });
+</script>
+
+{%endblock%}
+
+{%block navButtons%}
+<li><a style="cursor:pointer;" onclick="signout()" onsubmit="signout()">Sign Out</a></li>
+<li><a href="/about">About</a></li>
+{%endblock%}
+
+{% block body %}
+<div class="loginDiv">
+    <center>
+        <i class="loginI">Your Notes - </i>
+    </center>
+
+    <button onclick="add()" id="half-out-button" class="half-out-button"></button>
+    <b onclick="add()" class="textOfButton">+</b>
+
+</div>
+
+<div class="bg-modal">
+    <div class="modal-contents">
+        <div onclick="closeform()" class="close">+</div>
+        <form method="post">
+            <input class="addNote" type="text" name="buttonAddNote" id="buttonAddNote" autofocus
+                   placeholder="Enter Note Here">
+            <button class="addNote" onsubmit="return addNote();" onclick="return addNote();" type="submit">Add</button>
+        </form>
+    </div>
+</div>
+
+
+<div class="bg-modal-editNote">
+    <div class="modal-contents-editNote">
+        <div onclick="closeform_editNote()" class="close">+</div>
+        <form method="post">
+            <input class="editNote" type="text" name="buttonEditNote" id="buttonEditNote" autofocus>
+            <button class="editNote" onsubmit="return editNoteF();" onclick="return editNoteF();" type="submit">Edit
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<center>
+    <ul class="notes">
+        {% for i in range(0, notes|length) %}
+        <li>
+            <ul class="pack">
+                <b><i>
+                    <li class="note" id="li{{i}}" onclick="noteClick(document.getElementById('li{{i}}').innerHTML)">{{
+                        notes[i] }}
+                    </li>
+                </i></b>
+                <i>
+                    <li class="date">{{ dates[i] }}</li>
+                </i>
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</center>
+
+
+<div id="noteadded" class="onoteadded">
+    <div class="noteadded"><font class="noteadded">Note Added</font></div>
+</div>
+
+<div class="bg-modal-noteclick">
+    <div class="modal-contents-noteclicked">
+        <!--<div class="forFont" id="forFont"></div>-->
+        <div onclick="closeform_noteclicked()" class="close">+</div>
+        <ul class="note-clicked">
+            <li onclick="return editNote();"><b class="editButton">Edit</b></li>
+            <li onclick="return deleteNote();"><font color='red'><b class="delButton">DELETE</b></font></li>
+        </ul>
+
+    </div>
+</div>
+
+{% endblock %}

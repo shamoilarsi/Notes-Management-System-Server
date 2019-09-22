@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+
+{%block title%}Diary{%endblock%}
+{%block script%}
+
+<script>
+    //Wanted to run always when /main is loaded
+    var uname = getCookie("username");
+    if (uname == null)
+        uname = "None";
+
+
+    var password = getCookie("password");
+    if (password == null)
+        password = "None";
+
+    function ajax_main(){
+        $.ajax({
+            url: "/ajax_main",
+            type: "post",
+            data: {username: uname, password: password, link: window.location.pathname},
+            success: function (data) {
+                data = JSON.parse(data)
+                if (!data.status) {
+                    window.location = "/login";
+                }
+            }
+        });
+    }
+</script>
+
+{%endblock%}
+
+{%block navButtons%}
+<li><a style="cursor:pointer;" onclick="signout()" onsubmit="signout()">Sign Out</a></li>
+<li><a href="/about">About</a></li>
+{%endblock%}
+
+{%block title_bar_text%}  Your Notes -  {%endblock%}
+
+{%block extra_buttons_on_title_bar%}
+<button onclick="show_addNote_form()" id="half-out-button" class="half-out-button"></button>
+<b onclick="show_addNote_form()" class="textOfButton">+</b>
+{%endblock%}
+
+{% block body %}
+<div class="bg-modal-add-note">
+    <div class="modal-contents">
+        <div onclick="closeform_addNote()" class="close">+</div>
+        <form method="post">
+            <input class="addNoteCategory" type="text" name="buttonAddNote" id="buttonAddCategory" autofocus
+            placeholder="Enter Category Here">
+            <input class="addNote" type="text" name="buttonAddNote" id="buttonAddNote"
+                   placeholder="Enter Note Here">
+            <button class="addNote" onsubmit="return actually_addNote();" onclick="return actually_addNote();" type="submit">Add</button>
+        </form>
+    </div>
+</div>
+
+
+<div class="bg-modal-edit-note">
+    <div class="modal-contents-editNote">
+        <div onclick="closeform_editNote()" class="close">+</div>
+        <form method="post">
+            <input class="editNote" type="text" name="buttonEditNote" id="buttonEditNote" autofocus>
+            <button class="editNote" onsubmit="return editNote_submitted();" onclick="return editNote_submitted();" type="submit">Edit
+            </button>
+        </form>
+    </div>
+</div>
+    
+
+<center>
+    <ul class="notes" onload="ajax_main()">
+        {% for i in range(0, notes|length) %}
+        <li>
+            <ul class="pack">
+                <li style="user-select: none">
+                    <!-- <b style="font-size: 18px; font-style: italic;">Category : </b> -->
+                    <b style="font-size: 18px; font-style: italic; color:coral;">{{category[i]}}</b><br>
+                </li>
+                    <b style="font-size: 19px;">
+                        <i>
+                            <li class="note" id="li{{i}}" onclick="noteClick(document.getElementById('li{{i}}').innerHTML)">{{
+                        notes[i] }}
+                    </li>
+                </i></b>
+                <i>
+                    <li class="date" style="user-select: none">{{ dates[i] }}</li>
+                </i>
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</center>
+
+
+<div id="noteadded" class="onoteadded">
+    <div class="noteadded"><font class="noteadded">Note Added</font></div>
+</div>
+
+<div class="bg-modal-noteclick">
+    <div class="modal-contents-noteclicked">
+        <!--<div class="forFont" id="forFont"></div>-->
+        <div onclick="closeform_noteclicked()" class="close">+</div>
+        <ul class="note-clicked">
+            <li onclick="return show_editNode_form();"><b class="editButton">EDIT</b></li>
+            <li onclick="return deleteNote();"><font color='red'><b class="delButton">DELETE</b></font></li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
