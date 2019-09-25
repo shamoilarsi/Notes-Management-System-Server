@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{%block title%}Login - Diary{%endblock%}
+
+{%block script%}
+{%endblock%}
+
+
+<br>
+{%block title_bar_text%} Login {%endblock%}
+{%block body%}
+<form align="center" method="post" style="padding-top:10px;"
+      onsubmit="return validate_login();" autocomplete="off">
+    <font id="alert" color="red" size="3px"></font><br><br>
+    <b><i>Username : </i></b><input autofocus id="uname" type="text" name="uname" placeholder="shamoilarsi" required><br><br>
+    <b><i>Password : </i></b><input id="password" type="password" name="pass" placeholder="********" required style="margin-bottom: 8px;"><br>
+    <a href="#" onclick="return forgotpassword();" style="font-size: 14px; padding-left: 180px;">Forgot password?</a><br><br>
+    <button type="submit">Login</button>
+</form>
+
+
+<div class="bg-modal">
+    <div class="modal-contents-forgot-password">
+        
+    </div>
+</div>
+
+
+{%endblock%}

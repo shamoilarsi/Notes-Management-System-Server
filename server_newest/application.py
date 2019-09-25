@@ -10,7 +10,6 @@ import datetime
 import calendar
 import random
 import json
-import os
 
 
 db_diary = mysql.connector.connect(
@@ -139,25 +138,10 @@ def before_request_func():
 
 @app.route("/", methods=['post', 'get'])
 def index():
-    cur_diary.execute('select category from user_lquresh')
-    l2 = cur_diary.fetchall()
-    unique_list, full_list, count = [], [], []
-    l = list(set(l2))
-    for i in l:
-        unique_list.append(i[0])
-    for i in l2:
-        full_list.append(i[0])
+    
 
-    for i in unique_list:
-        count.append(full_list.count(i))
 
-    plt.figure(figsize=(6, 3))
-    plt.subplot(131)
-    plt.bar(unique_list, count)
-    plt.savefig('my_plot.png')
-    os.rename('my_plot.png', 'server_new/static/images/my_plot.png')
-
-    return render_template('analytics.html')
+  return render_template('analytics.html')
 
 @app.route("/about", methods=['post', 'get'])
 def about():

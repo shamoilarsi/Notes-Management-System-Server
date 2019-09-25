@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{%block title%}Diary{%endblock%}
+
+{%block navButtons%}
+<li><a style="cursor:pointer;" onclick="signout()" onsubmit="signout()">Sign Out</a></li>
+<li><a href="/about">About</a></li>
+{%endblock%}
+
+{%block title_bar_text%} Analytics {%endblock%}
+{% block body %}
+
+Graph
+<img src="http://127.0.0.1:5000/static/images/my_plot.png">
+
+
+{% endblock %}

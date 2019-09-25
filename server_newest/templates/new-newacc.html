@@ -1,0 +1,52 @@
+{%extends "layout.html" %}
+{%block title%}Diary - SignUp{%endblock%}
+
+{%block body%}
+<div class="form" style="margin-top: 20px;">
+    <div class="form-panel one" style="padding-top: 20px;">
+      <font style="font-family: Lovelo" id="alert" color="red" size="2px"></font><br><br>
+      <div class="form-header">
+        <h1 style="font-family: Lovelo">Create Account</h1>
+      </div>
+      <div class="form-content">
+        <form autocomplete="off" onsubmit="return validate_newacc();"> 
+            <div class="form-group">
+                <label for="first_name" style="font-family: Lovelo">First Name</label>
+                <input type="text" autofocus id="fname" name="fname" required="required">
+            </div>
+            <div class="form-group">
+                <label for="last_name" style="font-family: Lovelo">Last Name</label>
+                <input type="text" autofocus id="lname" name="lname" required="required">
+            </div>
+            <div class="form-group">
+                <label for="email" style="font-family: Lovelo">Email</label>
+                <input type="text" autofocus id="email" name="email" required="required">
+            </div>
+          <div class="form-group">
+            <label for="phone_number" style="font-family: Lovelo">Phone</label>
+            <input type="text" id="phone" name="phone" required="required">
+          </div>
+          <div class="form-group">
+                <label for="username" style="font-family: Lovelo">Username</label>
+                <input type="text" autofocus id="uname" name="uname" required="required">
+            </div>
+          <div class="form-group">
+            <label for="password" style="font-family: Lovelo">Password</label>
+            <input type="password" id="password" name="pass" required="required">
+          </div>
+          <div class="form-group">
+                <label for="security_ques" style="font-family: Lovelo">Security Question</label>
+                <input type="text" autofocus id="sques" name="sques" required="required" >
+            </div>
+            <div class="form-group">
+                    <label for="security_ans" style="font-family: Lovelo">Answer</label>
+                    <input type="text" autofocus id="ans" name="ans" required="required">
+                </div>
+          <div class="form-group">
+            <button type="submit" style="font-family: Lovelo">Create Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{%endblock%}

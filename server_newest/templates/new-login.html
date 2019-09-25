@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{%block title%}Login - Diary{%endblock%}
+
+{%block script%}
+{%endblock%}
+
+{%block body%}
+<div class="form">
+    <div class="form-panel one">
+      <font style="font-family: Lovelo" id="alert" color="red" size="3px"></font><br><br>
+      <div class="form-header">
+        <h1 style="font-family: Lovelo">Account Login</h1>
+      </div>
+      <div class="form-content">
+        <form autocomplete="off" onsubmit="return validate_login();"> 
+          <div class="form-group">
+            <label for="username" style="font-family: Lovelo">Username</label>
+            <input type="text" autofocus id="uname" name="uname" required="required" >
+          </div>
+          <div class="form-group">
+            <label for="password" style="font-family: Lovelo">Password</label>
+            <input type="password" id="password" name="pass" required="required">
+          </div>
+          <div class="form-group">
+            <label class="form-remember">   
+            </label><a class="form-recovery" href="#" onclick="return forgotpassword();">Forgot Password?</a>
+          </div>
+          <div class="form-group">
+            <button type="submit" style="font-family: Lovelo">Log In</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{%endblock%}
