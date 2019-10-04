@@ -13,7 +13,6 @@
     --mainbgdark: #2d2db7;
 }
 
-
 @keyframes fade-in {
     0% {
         opacity: 0;
@@ -475,6 +474,18 @@ div.forFont {
     cursor: pointer;
 }
 
+.select_dropdown{
+    width: 20%;
+    font-size: 20px;
+    margin-top: 10px;
+    padding: 10px;
+    margin-left: 10px;
+    justify-content: center;
+    border: 0;
+    background-color: lightgrey;
+    margin-bottom: 5px;
+    text-align-last:center;
+}
 
 @media (min-width: 867px) {
 

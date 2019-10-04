@@ -1,7 +1,6 @@
 # TODO: Read about Ajax
 # TODO: PL/SQL for password, email, phone verification
 # TODO: check delete id ka
-# TODO: edit 2 baar kiya toh error
 
 from flask import Flask, render_template, request, redirect
 import matplotlib.pyplot as plt
@@ -17,7 +16,8 @@ db_diary = mysql.connector.connect(
   host="localhost",
   user="root",
   passwd="root123",
-  database="diary")
+  database="diary",
+  autocommit=True)
 cur_diary = db_diary.cursor()
 app = Flask(__name__)
 
@@ -93,7 +93,6 @@ def delete_note(uname, note):
     id = str(cur_diary.fetchone()[0])
     cur_diary.execute(f"DELETE FROM user_{uname} WHERE note = \"{note}\"")
     cur_diary.execute(f"UPDATE user_{uname} SET ID = ID-1 WHERE ID > {id}")
-    db_diary.commit()
 def update_note(uname, oldnote, newnote, newcat):
     cur_diary.execute(f"UPDATE user_{uname} SET note = \"{newnote}\", category = \"{newcat}\" WHERE note = \"{oldnote}\"")
     db_diary.commit()

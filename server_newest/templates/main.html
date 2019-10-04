@@ -7,20 +7,51 @@
 <li><a href="/about">About</a></li>
 {%endblock%}
 
-{%block title_bar_text%}  Your Notes - {%endblock%}
+{%block title_bar_text%}  Notes {%endblock%}
 
 {%block extra_buttons_on_title_bar%}
-<button onclick="show_addNote_form()" id="half-out-button" class="half-out-button"></button>
-<b onclick="show_addNote_form()" class="textOfButton">+</b>
+<div id="div_half_button">
+    <button onclick="show_addNote_form()" id="half-out-button" class="half-out-button"></button>
+    <b onclick="show_addNote_form()" class="textOfButton">+</b>
+</div>
 {%endblock%}
 
 {% block body %}
+<div style="width: 100%; background-color: transparent; height: 100px; justify-content: center; text-align: center; margin-top: 15px;">
+    <form method="POST"> 
+        <select class="select_dropdown" id="Course">
+            <option value="engg">Engineering</option>
+          </select>
+
+          <select class="select_dropdown" id="Branch" onchange="branch_selected(this)">
+            <option value="none">Select Branch</option>
+            <option value="computers">Computers</option>
+            <option value="mechanical">Mechanical</option>
+          </select>
+
+          <select class="select_dropdown" onchange="subject_selected(this)" id="Year">
+            <option value="none">Select Year</option>
+            <option value="se">Second Year</option>
+            <option value="te">Third Year</option>
+            <option value="be">Final Year</option>
+          </select>
+
+          <select class="select_dropdown" id="Subject" onchange="load_notes(this)"></select>
+          
+          <br>
+          <!-- <button style="margin-top: 10px; border: 2px solid var(--mainbg)" > Search </button> -->
+        </form>
+
+    </div>
+
+</div>
+
 <div class="bg-modal-add-note">
     <div class="modal-contents-add-note">
         <div onclick="closeform_addNote()" style="margin-bottom: 5px;" class="close">+</div>
         <form method="post" autocomplete="off">
             <div class="form-group">
-                <label for="category" style="font-family: Lovelo">Category</label>
+                <label for="category" style="font-family: Lovelo">Unit</label>
                 <input type="text" autofocus id="buttonAddCategory" required="required">
             </div>
             <div class="form-group">
@@ -39,7 +70,7 @@
         <div onclick="closeform_editNote()" class="close">+</div>
         <form method="post" autocomplete="off">
             <div class="form-group">
-                <label for="category" style="font-family: Lovelo">Category</label>
+                <label for="category" style="font-family: Lovelo">Unit</label>
                 <input type="text" name="inputEditCategory" id="inputEditCategory" required="required">
             </div>
             <div class="form-group">
@@ -58,13 +89,13 @@
         {% for i in range(0, notes|length) %}
         <li>
             <ul class="pack">
-                <li style="user-select: none">
+                <li style="user-select: none; margin-bottom: 0px;">
                     <!-- <b style="font-size: 18px; font-style: italic;">Category : </b> -->
-                    <b id="cat{{i}}" style="font-size: 16px; font-style: italic; color:coral; font-family: Lovelo;">{{category[i]}}</b><br>
-                </li>
+                    <b id="cat{{i}}" style="font-size: 16px; font-style: italic; color:coral; font-family: Lovelo; margin-right: 10px;">{{category[i]}}</b> | <b id="fac{{i}}" style="margin-left: 10px; font-size: 14px; font-style: italic; color:purple; font-family: Lovelo;"> {{faculty[i]}}</b><br>
+                </li> 
                     <b style="font-size: 19px;">
                         <i>
-                            <li class="note" id="li{{i}}" onclick="noteClick(document.getElementById('cat{{i}}').innerHTML, document.getElementById('li{{i}}').innerHTML)">{{
+                            <li class="note" id="li{{i}}" onclick="noteClick(document.getElementById('cat{{i}}').innerHTML, document.getElementById('li{{i}}').innerHTML, document.getElementById('fac{{i}}').innerHTML)">{{
                         notes[i] }}
                     </li>
                 </i></b>

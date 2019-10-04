@@ -1,23 +1,28 @@
 # TODO: Read about Ajax
 # TODO: PL/SQL for password, email, phone verification
 # TODO: check delete id ka
-# TODO: edit 2 baar kiya toh error
 
-from flask import Flask, render_template, request, redirect
-import matplotlib.pyplot as plt
+from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 import datetime
 import calendar
 import random
 import json
 
+global_selected_subject = ""
+global_selected_year = ""
+global_selected_branch = ""
+notes, dates, category, faculty = [], [], [], [] # VERY BAD. THINK AN ALTERNATIVE PLEASE
+# CREATE TABLE users(id INTEGER PRIMARY KEY AUTO_INCREMENT, firstname varchar(20) NOT NULL, lastname varchar(20), email TEXT NOT NULL, username TEXT NOT NULL, password TEXT NOT NULL, security_ques TEXT NOT NULL, security_ans TEXT NOT NULL);
+# CREATE TABLE notes(id INTEGER PRIMARY KEY AUTO_INCREMENT, category_id varchar(20), notes text, date_time datetime)
 
-db_diary = mysql.connector.connect(
-  host="localhost",
-  user="root",
+database = mysql.connector.connect(
+  host="localhost", 
+  user="root",  
   passwd="root123",
-  database="diary")
-cur_diary = db_diary.cursor()
+  database="notes_management_system_db",
+  autocommit=True)
+cursor = database.cursor()
 app = Flask(__name__)
 
 def validate_password(password): 
@@ -65,43 +70,53 @@ def decode(password):
     if len(l) > 0:
         return True
 def if_username_exists(uname):
-    cur_diary.execute(f'SELECT username FROM users WHERE username="{uname}"')
-    l = (cur_diary.fetchall())
+    cursor.execute(f'SELECT username FROM users WHERE username="{uname}"')
+    l = (cursor.fetchall())
 
     if len(l) > 0:
         return True
     return False
-def insert_newacc(fname, lname, email, phone, uname, password, sques, ans):
-    cur_diary.execute(
-        "INSERT INTO users(firstname, lastname, email, phone_number, username, password, security_ques, security_ans) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)",
-        (fname, lname, email, phone, uname, str(password), sques, str(ans)))
-    db_diary.commit()
-def create_user_table(uname):
-    cur_diary.execute(f"CREATE TABLE user_{uname} (id INTEGER PRIMARY KEY AUTO_INCREMENT, category TEXT NOT NULL, note TEXT NOT NULL, date_time datetime NOT NULL) ")
-    db_diary.commit()
-    cur_diary.execute(f'SELECT id FROM users WHERE username="{uname}"')
-    cur_diary.execute(f'INSERT INTO login_count (id) VALUES ({int(cur_diary.fetchone()[0])})')
-    db_diary.commit()
+def insert_newacc(fname, lname, email, phone, uname, password, sques, ans, acc_type):
+    cursor.execute(
+        "INSERT INTO users(firstname, lastname, email, username, password, security_ques, security_ans, account_type) VALUES (%s, %s, %s, %s, %s, %s ,%s, %s)",
+        (fname, lname, email, uname, str(password), sques, str(ans), str(acc_type)))
+
+    cursor.execute(f'SELECT id FROM users WHERE username="{uname}"')
+    cursor.execute(f'INSERT INTO login_count (id) VALUES ({int(cursor.fetchone()[0])})')
 def insert_note(uname, category, note):
-    cur_diary.execute("SELECT NOW();")
-    date_time = cur_diary.fetchone()[0]
-    cur_diary.execute(f"INSERT INTO user_{uname} (category, note, date_time) VALUES (%s, %s, %s)", (category, note, date_time))
-    db_diary.commit()
+    global global_selected_year, global_selected_subject, global_selected_branch
+    cursor.execute("SELECT NOW();")
+    date_time = cursor.fetchone()[0]
+
+    cursor.execute(f'select id from users where username="{uname}"')
+    id = cursor.fetchone()[0]
+
+    if global_selected_year != "" and global_selected_subject != "":
+        cursor.execute(f'select id from engg_{global_selected_branch}_{global_selected_year} where Subjects="{global_selected_subject}"')
+        sub_id = cursor.fetchone()[0]
+        branch = ""
+        if global_selected_branch == "computers":
+            branch = "comp"
+        elif global_selected_branch == "mechanical":
+            branch = "mech"
+
+        cursor.execute(f"INSERT INTO notes (unit, notes, date_time, subject_id, category_id, user_id) VALUES (%s, %s, %s, %s, %s, %s)",
+         (category, note, date_time, sub_id, f'engg_{branch}_{global_selected_year.lower()}', id))
+        return True
+    return False
 def delete_note(uname, note):
-    cur_diary.execute(f"SELECT id FROM user_{uname} WHERE note = \"{note}\"")
-    id = str(cur_diary.fetchone()[0])
-    cur_diary.execute(f"DELETE FROM user_{uname} WHERE note = \"{note}\"")
-    cur_diary.execute(f"UPDATE user_{uname} SET ID = ID-1 WHERE ID > {id}")
-    db_diary.commit()
+    cursor.execute(f"SELECT id FROM notes WHERE notes = \"{note}\"")
+    id = str(cursor.fetchone()[0])
+    cursor.execute(f"DELETE FROM notes WHERE notes = \"{note}\"")
+    cursor.execute(f"UPDATE notes SET ID = ID-1 WHERE ID > {id}")
 def update_note(uname, oldnote, newnote, newcat):
-    cur_diary.execute(f"UPDATE user_{uname} SET note = \"{newnote}\", category = \"{newcat}\" WHERE note = \"{oldnote}\"")
-    db_diary.commit()
+    cursor.execute(f"UPDATE notes SET notes = \"{newnote}\", unit = \"{newcat}\" WHERE notes = \"{oldnote}\"")
 def verify_password(uname, password):
     values = {"status" : True, "alert_text" : ""}
     uname = uname.lower()
     if if_username_exists(uname):
-        cur_diary.execute(f'SELECT password FROM users WHERE username = "{uname}"')
-        database_password = decode(str(cur_diary.fetchone()[0]))
+        cursor.execute(f'SELECT password FROM users WHERE username = "{uname}"')
+        database_password = decode(str(cursor.fetchone()[0]))
 
         if not password == database_password:
             values["status"] = False
@@ -113,11 +128,10 @@ def verify_password(uname, password):
 
     return values
 def increment_logincount(uname):
-    cur_diary.execute(f'SELECT id FROM users WHERE username="{uname}"')
-    id = cur_diary.fetchone()[0]
-    cur_diary.execute(f'SELECT count FROM login_count WHERE id={id}')
-    cur_diary.execute(f'UPDATE login_count SET count={int(cur_diary.fetchone()[0]) + 1} WHERE id={id}')
-    db_diary.commit()
+    cursor.execute(f'SELECT id FROM users WHERE username="{uname}"')
+    id = cursor.fetchone()[0]
+    cursor.execute(f'SELECT count FROM login_count WHERE id={id}')
+    cursor.execute(f'UPDATE login_count SET count={int(cursor.fetchone()[0]) + 1} WHERE id={id}')
     
 @app.before_request
 def before_request_func():
@@ -138,10 +152,7 @@ def before_request_func():
 
 @app.route("/", methods=['post', 'get'])
 def index():
-    
-
-
-  return render_template('analytics.html')
+  return render_template('index.html')
 
 @app.route("/about", methods=['post', 'get'])
 def about():
@@ -149,10 +160,15 @@ def about():
 
 @app.route("/login", methods=['post', 'get'])
 def login():
+    global notes, dates, category
+    notes, dates, category = [], [], []
     return render_template("new-login.html")
 
 @app.route("/newacc", methods=['post', 'get'])
 def newacc():
+    global notes, dates, category
+    notes, dates, category = [], [], []
+
     return render_template("new-newacc.html")
 
 @app.route("/ajax_validate_newacc", methods=['post'])
@@ -165,17 +181,17 @@ def ajax_validate_newacc():
     password = str(request.form["password"])
     sques = str(request.form["sques"])
     ans = str(request.form["ans"])
+    account_type = (str(request.form["account_type"]))
 
     username_taken = if_username_exists(uname)
     valid_password = validate_password(password)
 
-    values = {"status" : True, "alert_text" : "", "color" : "green", "uname" : uname, "password" : password}
+    values = {"status" : True, "alert_text" : "", "color" : "green", "uname" : uname, "password" : password, "account_type" : account_type}
 
     if not username_taken and valid_password["is_valid"]:
         password = encode(password)
         ans = encode(ans)
-        insert_newacc(fname, lname, email, phone, uname, password, sques, ans)
-        create_user_table(uname)
+        insert_newacc(fname, lname, email, phone, uname, password, sques, ans, account_type)
         values["password"] = password
         return json.dumps(values)
 
@@ -194,33 +210,53 @@ def ajax_validate_login():
     password = str(request.form['password'])
 
     values = verify_password(uname, password)
+
+    cursor.execute(f'select account_type from users where username="{uname}"')
     values.update({"uname" : uname, "password" : encode(password)})
 
+    values["account_type"] =  cursor.fetchone()[0]
+    print(values)
     if values['status']:
         increment_logincount(uname)
     return json.dumps(values)
 
 @app.route("/main/<uname>", methods=['get', 'post'])
 def main_username(uname):
-    notes, dates, category = [], [], []
-    cur_diary.execute(f'SELECT * FROM user_{uname}')
-    database_data = cur_diary.fetchall()
+    global global_selected_subject, global_selected_year, global_selected_branch
+    global notes, dates, category, faculty
 
-    for item in database_data:
-        category.append((chr(ord(item[1][0]) - 32) if item[1][0].isalpha() else item[1][0]) + item[1][1:])
-        # category.append(item[1].upper())
-        notes.append(item[2])
-        dates.append(str(calendar.day_name[item[3].date().weekday()]) + " : " + str(item[3].date()) + " : " + str(item[3].time()))
-    return render_template('main.html', category=category, notes=notes, dates=dates)
+    if request.method == 'POST':
+        notes, dates, category, faculty = [], [], [], []
+        cursor.execute(f'select id from engg_{global_selected_branch}_{global_selected_year} where Subjects="{global_selected_subject}"')
+        subj_id = cursor.fetchone()[0]
+
+        cursor.execute(f'select id from users where username="{uname}"')
+        user_id = cursor.fetchone()[0]
+
+        branch = ""
+        if global_selected_branch == "computers":
+            branch = "comp"
+        elif global_selected_branch == "mechanical":
+            branch = "mech"
+
+        cursor.execute(f'SELECT * from notes where subject_id="{subj_id}" AND category_id="engg_{branch}_{global_selected_year}"')
+
+        data = cursor.fetchall()
+        for item in data:
+            cursor.execute(f'SELECT username FROM users WHERE id="{item[6]}"')
+            faculty.append(cursor.fetchone()[0])
+            category.append('UNIT ' + str(item[5]))
+            notes.append(item[2])
+            dates.append(str(calendar.day_name[item[3].date().weekday()]) + " : " + str(item[3].date()) + " : " + str(item[3].time()))
+
+    return render_template('main.html', category=category, notes=notes, dates=dates, faculty=faculty)
 
 @app.route("/ajax_add_note", methods=['post', 'get'])
 def ajax_add_note():
     category = str(request.form['category']).lower()
     note = str(request.form['note'])
     uname = str(request.form['username'])
-    insert_note(uname, category, note)
-
-    return json.dumps({"status" : True, "username" : uname})
+    return json.dumps({"status" : insert_note(uname, category, note), "username" : uname})
 
 @app.route("/ajax_delete_note", methods=['post', 'get'])
 def ajax_delete_note():
@@ -236,9 +272,36 @@ def ajax_edit_note():
     newcat = str(request.form['newcat']).lower()
     uname = str(request.cookies.get('username'))
 
+    print(uname, oldnote, newnote, newcat)
     update_note(uname, oldnote, newnote, newcat)
     return json.dumps({"status" : True, "username" : uname})
 
+@app.route('/ajax_get_subjects', methods=['get', 'post'])
+def ajax_get_subjects():
+    global global_selected_year, global_selected_branch
+    global_selected_year = str(request.form['year']).upper()
+    cursor.execute(f'SELECT Subjects FROM engg_{global_selected_branch}_{global_selected_year};')
+    db_list = cursor.fetchall()
+    
+    subject_list = ["Select Subject"]
+    for i in db_list:
+        subject_list.append(i[0])
+
+    return json.dumps({"status": True, "subject_list": subject_list})
+
+@app.route('/ajax_set_branch', methods=['post'])
+def ajax_set_branch():
+    global global_selected_branch
+
+    global_selected_branch = str(request.form['branch'])
+    return json.dumps({})
+
+@app.route('/ajax_get_notes', methods=['get', 'post'])
+def ajax_get_notes():
+    global global_selected_subject
+    global_selected_subject = str(request.form['subject'])
+    return json.dumps({"status": True})
+    
 app.run(debug=True)
 # increment_logincount('yesaditi1')
 # insert_newacc('lol', 'lol', 'lol', '98765431134', 'lol9', 'test', 'sed', 'yes')

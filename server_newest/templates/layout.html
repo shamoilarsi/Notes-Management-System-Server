@@ -4,18 +4,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="shortcut icon" href="http://127.0.0.1:5000/static/images/icon.ico" />
 <link rel="stylesheet" type="text/css" href="http://127.0.0.1:5000/static/css/styles.css">
-<script src="/static/js/script.js"></script>
+
 
 {%block script%} {%endblock%}
 
 
-<body>
+<body onload="body_onLoad()">
 <nav class="layout">
-    <p style="font-family: Lovelo;" class="title"><a class="title" href="/">Diary</a></p>
-    <ul class="layout" style="font-family: Lovelo;">
+    <p style="font-family: Lovelo; user-select: none;" class="title"><a class="title" href="/">  Notes</a></p>
+    <ul class="layout" style="font-family: Lovelo; user-select: none;">
         {%block navButtons%}
         <li><a href="/login">Login</a></li>
         <li><a href="/newacc">Sign Up</a></li>
@@ -26,7 +25,7 @@
 
     <div class="title_bar">
     <center>
-        <i class="title_bar_text" style="font-family: Lovelo;" >{%block title_bar_text%} {%endblock%}</i>
+        <i class="title_bar_text" style="font-family: Lovelo; user-select: none;" >{%block title_bar_text%} {%endblock%}</i>
     </center>
 
     {%block extra_buttons_on_title_bar%} {%endblock%}
@@ -36,4 +35,6 @@
 
 <div style="padding-bottom:20px;"></div>
 </body>
+<script src="/static/js/script.js"></script>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </html>
